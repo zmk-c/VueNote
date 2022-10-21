@@ -1,6 +1,15 @@
 # 前端Vue学习
-## 前提基础（略）
-**npm常用命令**
+**学习Vue之前要掌握的JavaScript基础知识**
+- ES6语法规范
+- ES6模块化
+- 包管理器
+- 原型，原型链
+- 数组常用方法
+- promise
+- axios
+- ...
+
+**npm常用命令（安装自行百度）**
 ```bash
 # 如果速度慢可以使用淘宝镜像 cnpm 首先安装cnpm)
 npm install -g cnpm --registry=https://registry.npm.taobao.org
@@ -33,25 +42,52 @@ npm 是按照队列执行每个package，也就是说必须要等到当前packag
 
 ## Vue2学习
 ### 第一章Vue核心
-**Vue的特点**：
-1. 采用`组件化`模式，提高代码复用率且让代码更好维护
-2. `声明式`编码，让编码人员无需直接操作DOM，提高开发效率
+**1.1 Vue的特点**：
+1. 采用<strong style="color:#DD5145">组件化</strong>模式，提高代码复用率且让代码更好维护
+2. <strong style="color:#DD5145">声明式</strong>编码，让编码人员无需直接操作DOM，提高开发效率
 ![20220902002331](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220902002331.png)
 
-**学习Vue之前要掌握的JavaScript基础知识**
-- ES6语法规范
-- ES6模块化
-- 包管理器
-- 原型，原型链
-- 数组常用方法
-- axios
-- promise
+**1.2 模板语法**
 
-**模板语法**
-![20220903092805](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903092805.png)
+Vue模板语法有2大类：
+1. **插值语法**：
+    功能：用于解析标签体内容
+    写法：{{xxx}}, 其中xxx是js表达式，且可以直接读取到data中的所有属性（不用this指向）
+2. **指令语法**：
+    功能：用于解析标签（包括：标签属性，标签体内容，绑定事件...）
+    举例：v-bind:href="xxx" 或 简写为 :href="xxx"，其中xxx同样要写js表达式，
+    且可以直接读取到data中的所有属性
+    备注⚠️：Vue中有很多指令，且形式都是：v-???，此处只是拿v-bind举例
 
 
-**数据绑定**
+```html
+<!-- 举例 -->
+<div id = "root">
+    <h1>插值语法（用于解析标签体内容）</h1>
+    <h3>你好, {{name}}</h3>
+    <hr>
+    <h1>指令语法（用于解析标签，包括标签属性 标签体内容 绑定事件）</h1>
+    <!-- v-bind:href  => :href  v-bind绑定 将url当成 js表达式 给标签里任何一个属性动态绑定值 -->
+    <a :href="school.url">点击去{{school.name}}官网</a> 
+    <br>
+    <a :href="school.url.toUpperCase()">点击去尚硅谷官网</a> 
+    <br>
+    <a :href="Date.now()">点击去尚硅谷官网</a> 
+    <hr>
+</div>
+```
+
+**1.3 数据绑定**
+
+Vue中有两种数据绑定的方式：
+1. **单向绑定（v-bind）**: 数据只能从data留下页面
+2. **双向绑定（v-model）**: 数据不仅能从data留下页面，还可以从页面留下data
+
+备注⚠️：
+1. 双向绑定v-model一般应用在表单元素上（如input select等）
+2. v-model:value 可以简写为v-model，因为v-model默认收集的就是value值
+
+
 `v-bind`属于单向绑定
 ![20220903093751](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903093751.png)
 
@@ -62,28 +98,151 @@ npm 是按照队列执行每个package，也就是说必须要等到当前packag
  <!-- 如下代码是错误的，因为v-model只能应用在表单类元素（输入类元素）上 -->
 <h2 v-model:x="name">你好啊</h2>
 ```
-![20220903094820](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903094820.png)
 
-**el与data的两种写法**
-![20220903101558](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903101558.png)
+**1.4 el与data的两种写法**
+
+data与el的两种写法
+1. el有两种写法
+    （1）new Vue的时候配置el属性
+    （2）先创建vue实例，随后再通过vm.$mount('#xxx')指定el的值
+
+```js
+举例：
+
+// el的两种写法
+const vm = new Vue({
+    el: '#root',  // 第一种写法
+    data: {
+        name: '尚硅谷'
+    }
+})
+
+vm.$mount('#root') // 第二种写法 比较灵活 例如 定时2秒在执行 实例
+setTimeout(() => {
+    vm.$mount('#root') // 比较灵活
+},2000)
+```
+
+2. data有两种写法
+    （1）对象式
+    （2）函数式
+    如何选择？ 目前学习时哪种写法都可以，以后学到组件时，data必须使用函数式，否则会报错
+
+```js
+举例：
+
+// data的两种写法
+new Vue({
+    el: '#root',
+    data: {     // data的第一种写法：对象式
+        name: '尚硅谷' 
+    }
+
+    data() {    // data的第二种写法：函数式  后面组件化 都采用这种
+        console.log('@@@@',this) // 此处的this是Vue实例对象 但是注意这里的data函数不能写成箭头函数 因为箭头函数没有自己的this 向外查找就是window对象
+        return {
+            name: '尚硅谷'
+        }
+    }
+})
+```
+
+3. 一个重要原则！！！⚠️
+    <strong style="color:#DD5145">由Vue管理的函数，一定不要写箭头函数，一旦写了箭头函数，this就不再是Vue实例了</strong>
 
 
-**MVVM模型**
-![20220903101947](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903101947.png)
+**1.5 MVVM模型**
+MVVM模型
+1. M: 模型（Model）, new Vue实例data中的数据
+2. V: 视图（View）, 模板代码
+3. VM: 视图模型（ViewModel）, Vue实例
 
-![20220903102907](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903102907.png)
+观察发现
+1. data中的所有属性最后都出现在了vm实例上
+2. vm身上所有的属性及Vue原型所有属性，在Vue模板中都可以直接使用
 
+![20221012175844](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20221012175844.png)
 
-**数据代理**
+**1.6 数据代理**
+1. Vue中的数据代理：
+    通过 vm对象 来 代理data对象 中属性的操作（读/写）
+2. Vue中数据代理的好处：
+    更加方便的操作data中的数据
+3. 基本原理：
+    <strong style="color:#DD5145">通过Object.defineProperty()把data对象中所有属性添加到vm上</strong>
+    为每一个添加到vm上的属性，都指定一个getter/setter
+    在getter/setter内部去操作（读/写）data中对应的属性
+
 ![20220903114101](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903114101.png)
 
-![20220903114150](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903114150.png)
+```js
+vue2数据代理原理Object.defineProperty举例：
+
+let person = {
+    name: '章三',
+    sex: '男',
+}
+
+// Object.defineProperty 定义新属性 或 修改原有的属性  默认定义的属性不可枚举
+Object.defineProperty(person,'age',{
+    value: 18,
+})
+
+Object.defineProperty(person,'age',{
+    value: 18,
+    enumerable: true, // 控制属性是否可枚举 默认false
+    writable: true, // 控制属性是否可以被修改 默认false
+    configurable:true, // 控制属性是否可以被删除 默认false
+
+    // 当有人读取person的age属性时 get函数(getter)就会被调用 且返回值就是age的值
+    get() {
+        console.log('有人读取age属性了')
+        return number
+    },
+
+    // 当有人修改person的age属性时 set函数(setter)就会被调用 且会收到修改的具体值
+    set(value) {
+        console.log('有人修改age属性值了，且值是 ' + value)
+        number = value;
+    }
+})
+```
 
 vm._data中的数据做了一番小小的升级 为了做响应式 但是还是包含address和name
 
-
 **事件处理**
-![20220903163111](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903163111.png)
+事件的基本使用：
+1. 使用v-on:xxx 或 @xxx绑定事件，其中xxx是事件名
+2. 事件的回调需要配置在methods对象中，最终会在vm上
+3. methods中配置的函数，不要使用箭头函数！否则this指向就不是vm了
+4. methods中配置的函数，都是被Vue所管理的，this的指向是**vm或组件实例对象**
+5. @click="demo"和@click="demo($event)"效果一致，但后者可以传参
+
+```js
+const vm = new Vue({
+    el: '#root',
+    data() {  // 只有配置在data中的数据 才会做数据劫持/数据代理
+        return {
+            name: '尚硅谷',
+        }
+    },
+    data: { // 其实方法也可以写在data中，但是这样会让vue很累  做了一遍没有意义的数据代理 
+        name: '尚硅谷',
+        /* showInfo2(event,param) {
+            console.log(event,param)
+        } */
+    },
+    methods: {
+        showInfo1(event) {
+            // console.log(this)  // 此处的this是vm  改成箭头函数this指向为window
+            alert('欢迎你 新同学1')
+        },
+        // showInfo2(event,param) {
+        //     console.log(event,param)
+        // }
+    }
+})
+```
 
 ![20220903163643](https://raw.githubusercontent.com/zmk-c/cloudImage/master/img/20220903163643.png)
 
