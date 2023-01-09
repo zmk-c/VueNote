@@ -1,10 +1,12 @@
 # VueNote  无__忧😃
 
 |    ES6快速上手    |    Axios快速上手    |     TypeScript快速上手    |   Vue3生态快速上手    |
-| :----------: | :------------: | :--------: | :----------: | :------------: | :--------: | :-----------: | :--------: |
+| :----------: | :------------: | :--------: | :----------: | 
 | [✊](#ES6快速上手) | [✋](#Axios快速上手) | [🤝](#TypeScript快速上手) | [👏](#Vue3生态快速上手) |
 
-<img src="./images/vue3/vue3.png" style="zoom:30%;display:block;margin:0 auto" />
+<div style="text-align:center">
+  <img src="https://user-images.githubusercontent.com/499550/93624428-53932780-f9ae-11ea-8d16-af949e16a09f.png" style="width:200px;"/>
+</div>
 
 ## [ES6快速上手 ✊](./ES6-started-quickly.md)
 
