@@ -1,3 +1,4 @@
+<img src="./images/es6/es6.jpeg">
 # ES6快速上手
 
 ES全称EcmaScript，是脚本语言的规范，而平时经常编写的JavaScript，是EcmaScript的一种实现，所以ES新特性其实指的就是JavaScript的新特性。
